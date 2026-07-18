@@ -262,8 +262,10 @@ async def consent_ok(message: Message, state: FSMContext):
 # ── ГЛАВНОЕ МЕНЮ ─────────────────────────────────────────────────────────────
 @dp.message(Registration.confirmed, F.text == "📚 Начать обучение")
 async def start_training(message: Message, state: FSMContext):
+    data = await state.get_data()
+    branch = data.get('branch', 'вашей должности')
     await message.answer(
-        "📚 <b>Программа обучения — Продавец</b>\n\n"
+        f"📚 <b>Программа обучения — {branch}</b>\n\n"
         "Модули будут добавляться по мере готовности материалов.\n\n"
         "⏳ <i>Скоро здесь появятся уроки — следите за обновлениями!</i>",
         parse_mode="HTML",
@@ -282,7 +284,7 @@ async def my_card(message: Message, state: FSMContext):
         f"📅 <b>Дата регистрации:</b> {data.get('registered_at', '—')}\n"
         f"📄 <b>Соглашение принято:</b> {data.get('agreement_date', '—')}\n"
         f"📊 <b>Статус:</b> Проходит обучение\n"
-        f"🎓 <b>Должность:</b> Продавец"
+        f"🎓 <b>Должность:</b> {data.get('branch', '—')}"
     )
     await message.answer(text, parse_mode="HTML", reply_markup=KB_MAIN)
 
@@ -330,7 +332,7 @@ async def notify_admin(data: dict, user, registered_at: str):
         f"✈️ <b>Telegram:</b> {tg_username}\n"
         f"📅 <b>Дата регистрации:</b> {registered_at}\n"
         f"📄 <b>Соглашение принято:</b> {data.get('agreement_date', '—')}\n"
-        f"🎓 <b>Должность:</b> Продавец\n"
+        f"🎓 <b>Должность:</b> {data.get('branch', '—')}\n"
         f"📊 <b>Статус:</b> Приступил к обучению"
     )
     try:
